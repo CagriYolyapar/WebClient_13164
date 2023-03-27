@@ -1,0 +1,121 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+
+    <link href="../Content/bootstrap.css" rel="stylesheet" />
+
+    <script src="../Scripts/jquery-3.6.4.js"></script>
+
+    <script src="../Scripts/bootstrap.js"></script>
+
+    <style>
+        .genislik{
+            width:300px;
+        }
+    </style>
+
+</head>
+<body>
+
+
+
+    <div class="container">
+        <div class="row">
+
+            <div class="col-6">
+
+                ID => <input type="text" class="form-control genislik" id="txtID" placeholder="ID giriniz" />
+                Name => <input type="text" class="form-control genislik" id="txtName" placeholder="Kategori İsmi" />
+                Description => <input type="text" class="form-control genislik" id="txtDesc" placeholder="Aciklama" />
+
+                <hr />
+
+                <input type="button" id="btnAll" class="btn btn-info" value="Kategorileri Getir" />
+                <input type="button" id="btnID" class="btn btn-primary" value="Kategori getir" />
+
+                <hr />
+
+                <input type="button" id="btnAdd" class="btn btn-info" value="Kategori ekle" />
+                <input type="button" id="btnDelete" class="btn btn-danger" value="Kategori sil" />
+                <input type="button" id="btnUpdate" class="btn btn-warning" value="Kategori Güncelle" />
+
+
+                <hr />
+
+                <input type="text" id="txtSearch" class="form-control genislik" placeholder="Arama yapınız" />
+
+            </div>
+
+            <div class="col-6">
+
+
+                <table id="tab1" class="table table-hover">
+
+                    <tr>
+                        <th>Kategori ID</th>
+                        <th>Kategori Ismi</th>
+                        <th>Kategori Acıklaması</th>
+                    </tr>
+
+
+
+
+
+                </table>
+
+
+            </div>
+
+
+
+        </div>
+    </div>
+
+    <!-- Ulasmak istedigimiz API URL'i  =>      http://localhost:52526/                   -->
+
+
+    <script>
+
+        //Bu fonksiyonumuz Table'imizdaki ilk tr dısındaki tüm tr'leri temizliyor...
+
+        function ControlHeader() {
+            //Jquery kullanma sembolü $ sembolüdür... Biz bu sembolü kullandıgımız anda Jquery kullandıgımızı belirtiyoruz
+
+
+            $("#tab1").find("tr:gt(0)").remove(); //burada tr:gt(0) ifadesi : "Table row must be greater than zero" demektir ki tr'sinin index'i 0'dan büyük olan tüm tr'leri bul ve sil anlamına gelir...
+        }
+
+
+        //Bu fonksiyonumuzun amacı API'ya gittigimiz ve veri aldıgımı zaman o verileri tablomuzun icerisine entegre etmektir...
+
+        //List halinde gelen veriyi tasarımımıza entegre etmek icin bir fonksiyon tasarlıyoruz
+
+        function BringDataList(dataList) {
+            ControlHeader();
+
+            //JavaScript'te her eylem bir fonksiyondur...Anlık eylemler ise Anonymus Function'lar olarak acılır
+
+            $.each(dataList, function(key,data) {
+
+                $("#tab1").append("<tr>  <td>  "+   data.ID +"    </td> <td> "+data.CategoryName+" </td>     <td>"+data.Description+"</td>      </tr>");
+
+
+
+            })
+        }
+
+
+
+
+
+    </script>
+
+
+
+
+
+
+</body>
+</html>
