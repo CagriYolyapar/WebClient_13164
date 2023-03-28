@@ -166,6 +166,30 @@
 
 
 
+            //Kategori Ekle
+
+            $("#btnAdd").click(function () {
+
+                $.ajax({
+
+                    url: "http://localhost:52526/api/Category/AddCategory",
+                    type: "Post",
+                    data: { CategoryName: $("#txtName").val(), Description: $("#txtDesc").val() },
+                    success: function (dataList) {
+                        BringDataList(dataList);
+                    }
+
+
+
+                })
+
+            })
+
+
+
+
+
+
         })
 
 
