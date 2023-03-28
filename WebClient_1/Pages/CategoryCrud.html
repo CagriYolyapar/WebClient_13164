@@ -11,8 +11,8 @@
     <script src="../Scripts/bootstrap.js"></script>
 
     <style>
-        .genislik{
-            width:300px;
+        .genislik {
+            width: 300px;
         }
     </style>
 
@@ -97,14 +97,80 @@
 
             //JavaScript'te her eylem bir fonksiyondur...Anlık eylemler ise Anonymus Function'lar olarak acılır
 
-            $.each(dataList, function(key,data) {
+            $.each(dataList, function (key, data) {
 
-                $("#tab1").append("<tr>  <td>  "+   data.ID +"    </td> <td> "+data.CategoryName+" </td>     <td>"+data.Description+"</td>      </tr>");
+                $("#tab1").append("<tr>  <td>  " + data.ID + "    </td> <td> " + data.CategoryName + " </td>     <td>" + data.Description + "</td>      </tr>");
 
 
 
             })
         }
+
+
+        //Bu fonksiyonumuzun amacı API'ya gittigimiz zaman aldığımız tekil veriyi tasarımda tablomuzun icerisine entegre etmektir.
+
+        function BringData(data) {
+            ControlHeader();
+
+            $("#tab1").append("<tr> <td>" + data.ID + " </td> <td>" + data.CategoryName + " </td> <td>" + data.Description + " </td> </tr> ");
+        }
+
+
+
+        //API'ya ulasım kodlarını yazmadan önce sayfanın render edilme olayının tamamlandıgından emin olmak istiyoruz
+
+
+        $(function () {
+
+            //Kategorileri Listelemek
+
+            $("#btnAll").click(function () {
+
+                //API'ya ulasmak icin ajax metodunu kullanırsınız...Acımı Asyncronous JavaScript And XML olan AJAX sayfanızın görünürde loading yapmadan sayfanın değişmesini sağlar...Bunun yanında API'ya ulasmak icin en rahat yontemlerden biridir...
+
+                $.ajax({
+                    //ajax parametrelerinin ismi önemlidir kafanıza göre yazamazsınız
+                    url: "http://localhost:52526/api/Category/BringCategories",
+                    type: "Get",
+                    success: function (dataList) {
+                        BringDataList(dataList);
+                    }
+
+
+                })
+
+
+
+
+
+            })    
+
+
+            //Kategori Getir
+
+            $("#btnID").click(function () {
+
+                $.ajax({
+
+                    url: "http://localhost:52526/api/Category/GetCategory", //burada dilerseniz data parametresinde JSON verisi göndermek yerine URL'e direkt /"+$("#txtID").val() yazılabilir...Ama eger böyle yapacaksanız sakın GetCategory'den sonra slash koymayı unutmayın...Ve bir de bu ancak gitmek istediginiz Action parametresinin ismi id ise gecerlidir...
+                    data: { id: $("#txtID").val() },
+                    type: "Get",
+                    success: function (data) {
+                        BringData(data);
+                    }
+
+                })
+
+
+            }) 
+
+
+
+        })
+
+
+
+
 
 
 
