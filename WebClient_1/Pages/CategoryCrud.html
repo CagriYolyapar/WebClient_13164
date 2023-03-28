@@ -99,7 +99,7 @@
 
             $.each(dataList, function (key, data) {
 
-                $("#tab1").append("<tr>  <td>  " + data.ID + "    </td> <td> " + data.CategoryName + " </td>     <td>" + data.Description + "</td>      </tr>");
+                $("#tab1").append("<tr>  <td>  " + data.ID + "    </td> <td> " + data.CategoryName + " </td>     <td>" + data.Description + "</td>   <td> <button data-id='" + data.ID + "' value='update' id='btnUpdate" + data.ID + "'  class='btn btn-warning'> Güncelle </button> </td> <td> <button class='btn btn-danger' data-id='" + data.ID + "' value='delete'> Sil </button> </td> <td> <button class='btn btn-primary' data-id='" + data.ID + "' value='select' > Sec   </button> </td>  </tr>");
 
 
 
@@ -112,7 +112,14 @@
         function BringData(data) {
             ControlHeader();
 
-            $("#tab1").append("<tr> <td>" + data.ID + " </td> <td>" + data.CategoryName + " </td> <td>" + data.Description + " </td> </tr> ");
+
+            $("#tab1").append("<tr>  <td>  " + data.ID + "    </td> <td> " + data.CategoryName + " </td>     <td>" + data.Description + "</td>   <td> <button data-id='" + data.ID + "' value='update' id='btnUpdate" + data.ID + "'  class='btn btn-warning'> Güncelle </button> </td> <td> <button class='btn btn-danger' data-id='" + data.ID + "' value='delete'> Sil </button> </td> <td> <button class='btn btn-primary' data-id='" + data.ID + "' value='select' > Sec   </button> </td>  </tr>");
+        }
+
+        function FetchData(data) {
+            $("#txtID").val(data.ID);
+            $("#txtName").val(data.CategoryName);
+            $("#txtDesc").val(data.Description);
         }
 
 
@@ -143,7 +150,7 @@
 
 
 
-            })    
+            })
 
 
             //Kategori Getir
@@ -162,7 +169,7 @@
                 })
 
 
-            }) 
+            })
 
 
 
@@ -186,8 +193,123 @@
             })
 
 
+            //Kategori Sil
+
+            //Delete yöntemlerinde Data ile server'a veri gönderemezsiniz...O yüzden mecburi bir şekilde parametre verisini URL'den vermeniz gerekir
+
+            $("#btnDelete").click(function () {
+
+                $.ajax({
+
+                    url: "http://localhost:52526/api/Category/DeleteCategory/" + $("#txtID").val(),
+                    type: "Delete",
+                    success: function (dataList) {
+                        BringDataList(dataList);
+                    }
 
 
+
+                })
+
+
+            })
+
+            //Kategori Güncelle
+
+            $("#btnUpdate").click(function () {
+
+                $.ajax({
+
+                    url: "http://localhost:52526/api/Category/UpdateCategory",
+                    type: "Put",
+                    data: { ID: $("#txtID").val(), CategoryName: $("#txtName").val(), Description: $("#txtDesc").val() },
+                    success: function (dataList) {
+                        BringDataList(dataList);
+                    }
+
+                })
+
+
+            })
+
+            //Search Category
+            $("#txtSearch").keyup(function () {
+                $.ajax({
+                    url: "http://localhost:52526/api/Category/SearchCategory",
+                    type: "Get",
+                    data: { item: $(this).val() },
+                    success: function (dataList) {
+                        BringDataList(dataList);
+                    }
+
+
+                })
+
+
+            })
+
+
+
+            //JS EventHandling
+
+            //Update button
+
+            $("#tab1").on("click", "[value=update]", function () {
+
+
+                $.ajax({
+
+                    url: "http://localhost:52526/api/Category/UpdateCategory",
+                    type: "Put",
+                    data: { ID: $(this).attr("data-id"), CategoryName: $("#txtName").val(), Description: $("#txtDesc").val() },
+                    success: function (dataList) {
+                        BringDataList(dataList);
+                    }
+
+                })
+
+
+            })
+
+            //Delete Button
+
+            $("#tab1").on("click", "[value=delete]", function () {
+
+
+                $.ajax({
+
+                    url: "http://localhost:52526/api/Category/DeleteCategory/" + $(this).attr("data-id"),
+                    type: "Delete",
+                    success: function (dataList) {
+                        BringDataList(dataList);
+                    }
+
+
+
+                })
+
+
+
+            })
+
+
+            //Select Button
+            $("#tab1").on("click", "[value=select]", function () {
+
+                $.ajax({
+
+                    url: "http://localhost:52526/api/Category/GetCategory", //burada dilerseniz data parametresinde JSON verisi göndermek yerine URL'e direkt /"+$("#txtID").val() yazılabilir...Ama eger böyle yapacaksanız sakın GetCategory'den sonra slash koymayı unutmayın...Ve bir de bu ancak gitmek istediginiz Action parametresinin ismi id ise gecerlidir...
+                    data: { id: $(this).attr("data-id") },
+                    type: "Get",
+                    success: function (data) {
+                        FetchData(data);
+                    }
+
+                })
+
+
+
+            })
 
 
         })
